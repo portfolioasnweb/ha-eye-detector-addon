@@ -1,23 +1,22 @@
-FROM python:3.10-slim
+FROM ghcr.io/home-assistant/amd64-base:latest
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG C.UTF-8
 
-RUN apt-get update && apt-get install -y \
-    libgl1 \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender1 \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    libgl \
+    libglib
 
-RUN pip install --no-cache-dir \
+WORKDIR /app
+
+COPY rootfs /
+
+RUN pip3 install --no-cache-dir \
     mediapipe \
-    opencv-python-headless \
-    paho-mqtt \
-    numpy \
-    requests
+    opencv-python \
+    numpy
 
-COPY rootfs/ /
 RUN chmod +x /run.sh
 
 CMD ["/run.sh"]
