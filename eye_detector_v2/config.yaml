@@ -2,15 +2,10 @@ name: Eye Detector V2
 slug: eye_detector_v2
 description: Detecta olhos fechados usando MediaPipe
 version: "2.0.0"
-
 arch:
   - amd64
-
 startup: services
 boot: auto
 host_network: true
-
-build: .
-
 options: {}
 schema: {}
