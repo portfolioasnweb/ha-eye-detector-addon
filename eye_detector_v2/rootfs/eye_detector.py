@@ -1,7 +1,7 @@
 import time
 
-print("[Eye Detector V2] Running...")
+print("[Eye Detector V2] Serviço iniciado")
 
 while True:
-    time.sleep(10)
-    print("[Eye Detector V2] Alive")
+    print("[Eye Detector V2] Rodando...")
+    time.sleep(30)
