@@ -1,11 +1,14 @@
 name: "Eye Detector V2"
 slug: "eye_detector_v2"
-description: "Detecta olhos fechados usando MediaPipe"
-version: "2.0.0"
+description: "Detecta olhos fechados via RTSP usando MediaPipe e EAR"
+version: "2.2.0"
 arch:
   - amd64
 startup: services
 boot: auto
 host_network: true
-options: {}
-schema: {}
+hassio_api: true
+options:
+  rtsp_url: ""
+schema:
+  rtsp_url: str
