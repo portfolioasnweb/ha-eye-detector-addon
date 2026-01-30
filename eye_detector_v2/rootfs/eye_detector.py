@@ -7,17 +7,16 @@ import json
 import numpy as np
 from scipy.spatial import distance as dist
 
-print("[Eye Detector V2] Carregando módulos...", flush=True)
+print("[Eye Detector V2] Carregando modelos e configurações...", flush=True)
 
-# Configurações
 OPTIONS_PATH = "/data/options.json"
 HASSIO_TOKEN = os.getenv('SUPERVISOR_TOKEN')
 API_URL = "http://supervisor/core/api/states/binary_sensor.eye_detector_status"
 
-# Marcos do MediaPipe
+# Índices para cálculo de EAR
 LEFT_EYE = [362, 385, 387, 263, 373, 380]
 RIGHT_EYE = [33, 160, 158, 133, 153, 144]
-EAR_THRESHOLD = 0.21
+EAR_THRESHOLD = 0.21 
 
 def get_ear(eye_points):
     v1 = dist.euclidean(eye_points[1], eye_points[5])
@@ -28,18 +27,23 @@ def get_ear(eye_points):
 def update_ha(is_closed):
     headers = {"Authorization": f"Bearer {HASSIO_TOKEN}", "Content-Type": "application/json"}
     data = {"state": "on" if is_closed else "off", "attributes": {"device_class": "problem", "friendly_name": "Olhos Fechados"}}
-    try: requests.post(API_URL, headers=headers, json=data, timeout=5)
-    except: pass
+    try:
+        requests.post(API_URL, headers=headers, json=data, timeout=5)
+    except:
+        pass
 
-# Ler configuração
-with open(OPTIONS_PATH) as f:
-    config = json.load(f)
-    RTSP_URL = config.get("rtsp_url")
+# Carrega a URL configurada pelo usuário na interface do HA
+try:
+    with open(OPTIONS_PATH) as f:
+        config = json.load(f)
+        RTSP_URL = config.get("rtsp_url")
+except Exception as e:
+    print(f"[Eye Detector V2] Erro ao ler configurações: {e}", flush=True)
+    RTSP_URL = None
 
 if not RTSP_URL:
-    print("[Eye Detector V2] Erro: RTSP_URL não configurada!", flush=True)
-    time.sleep(10)
-    exit(1)
+    print("[Eye Detector V2] ERRO: URL RTSP não encontrada. Configure na aba Ajustes!", flush=True)
+    while True: time.sleep(60)
 
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(refine_landmarks=True, max_num_faces=1)
@@ -48,10 +52,10 @@ print(f"[Eye Detector V2] Conectando ao stream: {RTSP_URL}", flush=True)
 cap = cv2.VideoCapture(RTSP_URL)
 last_state = None
 
-while cap.isOpened():
+while True:
     success, frame = cap.read()
     if not success:
-        print("[Eye Detector V2] Falha na imagem, tentando reconectar...", flush=True)
+        print("[Eye Detector V2] Falha no sinal. Tentando reconectar...", flush=True)
         time.sleep(5)
         cap = cv2.VideoCapture(RTSP_URL)
         continue
@@ -71,6 +75,6 @@ while cap.isOpened():
     if eyes_closed != last_state:
         update_ha(eyes_closed)
         last_state = eyes_closed
-        print(f"[Eye Detector V2] Olhos: {'Fechados' if eyes_closed else 'Abertos'}", flush=True)
+        print(f"[Eye Detector V2] Estado alterado: {'Fechado' if eyes_closed else 'Aberto'}", flush=True)
     
     time.sleep(0.05)
