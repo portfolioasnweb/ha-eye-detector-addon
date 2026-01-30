@@ -4,7 +4,7 @@ FROM ${BUILD_FROM}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 
-# Instala dependências do sistema
+# 1. Instala dependências do sistema
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
@@ -12,14 +12,16 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala bibliotecas Python
+# 2. Instala as bibliotecas Python necessárias
 RUN pip3 install --no-cache-dir --break-system-packages \
     numpy \
     opencv-python-headless \
-    mediapipe
+    mediapipe \
+    requests \
+    scipy
 
-# Copia o conteúdo de rootfs para a raiz [/]
+# 3. Copia o conteúdo de 'rootfs' para a raiz [/] do container
 COPY rootfs/ /
 
-# Garante permissão de execução
+# 4. Garante permissão de execução no script de entrada
 RUN chmod a+x /run.sh
