@@ -1,7 +1,7 @@
 name: "Eye Detector V2"
 slug: "eye_detector_v2"
-description: "Detecta olhos fechados via RTSP usando MediaPipe e EAR"
-version: "2.2.0"
+description: "Detecta olhos fechados via RTSP usando MediaPipe"
+version: "2.2.1"
 arch:
   - amd64
 startup: services
