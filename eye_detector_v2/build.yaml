@@ -1,2 +1,2 @@
 build_from:
-  amd64: python:3.10-slim
+  amd64: ghcr.io/home-assistant/amd64-base:latest
