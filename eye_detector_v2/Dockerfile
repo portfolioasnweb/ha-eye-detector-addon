@@ -12,16 +12,14 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala as bibliotecas Python necessárias
+# Instala bibliotecas Python
 RUN pip3 install --no-cache-dir --break-system-packages \
     numpy \
     opencv-python-headless \
-    mediapipe \
-    requests \
-    scipy
+    mediapipe
 
-# Copia o conteúdo de rootfs para a raiz [/] do container
+# Copia o conteúdo de rootfs para a raiz [/]
 COPY rootfs/ /
 
-# Garante permissão de execução no script
+# Garante permissão de execução
 RUN chmod a+x /run.sh
