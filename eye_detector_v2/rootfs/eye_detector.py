@@ -32,7 +32,7 @@ def update_ha(is_closed):
     except:
         pass
 
-# Carregar URL configurada na interface do HA
+# Carregar URL configurada
 try:
     with open(OPTIONS_PATH) as f:
         config = json.load(f)
@@ -41,7 +41,7 @@ except:
     RTSP_URL = None
 
 if not RTSP_URL:
-    print("[Erro] URL RTSP não configurada nos Ajustes!", flush=True)
+    print("[Eye Detector V2] ERRO: URL RTSP não configurada!", flush=True)
     while True: time.sleep(60)
 
 mp_face_mesh = mp.solutions.face_mesh
@@ -72,6 +72,6 @@ while True:
     if eyes_closed != last_state:
         update_ha(eyes_closed)
         last_state = eyes_closed
-        print(f"Estado: {'Fechado' if eyes_closed else 'Aberto'}", flush=True)
+        print(f"[Eye Detector V2] Estado: {'Fechado' if eyes_closed else 'Aberto'}", flush=True)
     
     time.sleep(0.05)
