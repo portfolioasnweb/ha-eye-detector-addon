@@ -1,1 +1,2 @@
-
+#!/usr/bin/with-contenv bash
+exec python3 /app/eye_detector.py
