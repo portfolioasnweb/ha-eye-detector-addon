@@ -13,7 +13,7 @@ OPTIONS_PATH = "/data/options.json"
 HASSIO_TOKEN = os.getenv('SUPERVISOR_TOKEN')
 API_URL = "http://supervisor/core/api/states/binary_sensor.eye_detector_status"
 
-# Marcos dos olhos (MediaPipe Mesh) 
+# Marcos dos olhos (MediaPipe Mesh)
 LEFT_EYE = [362, 385, 387, 263, 373, 380]
 RIGHT_EYE = [33, 160, 158, 133, 153, 144]
 EAR_THRESHOLD = 0.21 
@@ -32,7 +32,7 @@ def update_ha(is_closed):
     except:
         pass
 
-# Carregar URL configurada 
+# Carregar URL configurada na interface do HA
 try:
     with open(OPTIONS_PATH) as f:
         config = json.load(f)
@@ -41,7 +41,7 @@ except:
     RTSP_URL = None
 
 if not RTSP_URL:
-    print("[Erro] URL RTSP não configurada!", flush=True)
+    print("[Erro] URL RTSP não configurada nos Ajustes!", flush=True)
     while True: time.sleep(60)
 
 mp_face_mesh = mp.solutions.face_mesh
