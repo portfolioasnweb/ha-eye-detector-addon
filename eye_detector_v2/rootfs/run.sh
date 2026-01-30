@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv sh
 set -e
 
-echo "[Eye Detector V2] Iniciando..."
+echo "[Eye Detector V2] Iniciando o ambiente..."
 
-# Executa o script que foi copiado para a raiz
+# O arquivo eye_detector.py foi copiado para a raiz (/) pelo Dockerfile
 python3 /eye_detector.py
