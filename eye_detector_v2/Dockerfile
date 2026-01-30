@@ -1,27 +1,15 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-debian:latest
 FROM ${BUILD_FROM}
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LANG=C.UTF-8
-
-# 1. Instala dependências do sistema
+# Instala dependências
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    libgl1 \
-    libglib2.0-0 \
+    python3 python3-pip libgl1 libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Instala as bibliotecas Python necessárias
+# Instala bibliotecas
 RUN pip3 install --no-cache-dir --break-system-packages \
-    numpy \
-    opencv-python-headless \
-    mediapipe \
-    requests \
-    scipy
+    numpy opencv-python-headless mediapipe requests scipy
 
-# 3. Copia o conteúdo de 'rootfs' para a raiz [/] do container
+# Copia os arquivos
 COPY rootfs/ /
-
-# 4. Garante permissão de execução no script de entrada
-RUN chmod a+x /run.sh
+RUN chmod a+x /etc/services.d/eye_detector/run
